@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lizea ❤️</title>
+<style>
+/* BODY */
+body {
+    margin:0;
+    font-family: 'Dancing Script', cursive, 'Segoe UI', sans-serif;
+    background: linear-gradient(to bottom, #ffe6f0, #ffb3c6);
+    color: #fff;
+    text-align: center;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* TITRES */
+h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 5px rgba(255, 0, 100, 0.5);
+    background: linear-gradient(45deg, #ff4b7d, #ff99b3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* PAGES */
+.page {
+    display: none;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.active {
+    display: flex;
+}
+
+/* INPUT MOT DE PASSE */
+input[type=password] {
+    padding: 15px;
+    font-size: 1.2em;
+    border-radius: 25px;
+    border: none;
+    width: 200px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* BUTTONS */
+button {
+    padding: 12px 25px;
+    margin: 10px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: 0.3s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Oui/Non */
+#oui {
+    background: #ff4b7d;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+}
+#non {
+    background: #ff99b3;
+    color: white;
+    position: absolute;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/* MENU */
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 20px;
+}
+.block {
+    background: #ff66a3;
+    padding: 30px;
+    border-radius: 25px;
+    width: 200px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 22px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: 0.3s;
+}
+.block:hover {
+    transform: scale(1.1);
+    background: #ff4b7d;
+}
+
+/* CALENDAR */
+table {
+    border-collapse: collapse;
+    margin: auto;
+}
+td, th {
+    padding: 8px;
+    text-align: center;
+    cursor: pointer;
+}
+.marked {
+    background: #ff1a75;
+    color: white;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* POPUP */
+#popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: rgba(255, 75, 125, 0.95);
+    padding: 30px;
+    border-radius: 25px;
+    color: white;
+    text-align: center;
+    font-size: 20px;
+    z-index: 100;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    opacity: 0;
+}
+#popup.active {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+#popup h2 { margin: 0 0 15px 0; }
+
+/* HEARTS ANIMATION */
+.heart {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: red;
+    transform: rotate(-45deg);
+    animation: float 5s linear infinite;
+    opacity: 0.7;
+    border-radius: 3px;
+}
+@keyframes float {
+    0% {transform: translateY(0) rotate(-45deg);}
+    100% {transform: translateY(-400px) rotate(-45deg);}
+}
+
+/* TEXT FLOAT */
+.floatText {
+    position: absolute;
+    font-size: 22px;
+    font-weight: bold;
+    font-family: 'Dancing Script', cursive;
+    animation: floatTextAnim 6s linear infinite;
+}
+@keyframes floatTextAnim {
+    0% {transform: translateY(0);}
+    100% {transform: translateY(-350px);}
+}
+
+/* PHOTOS */
+.photos-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+.photos-container img {
+    width: 45%;
+    border-radius: 25px;
+}
+
+/* STORY */
+#heartsStory div {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #ff3366;
+    transform: rotate(-45deg);
+    animation: float 4s linear infinite;
+    border-radius: 3px;
+    opacity: 0.7;
+}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+    .menu { flex-direction: column; align-items: center; }
+    .photos-container img { width: 90%; }
+    h2 { font-size: 2em; }
+}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD -->
+<div id="p1" class="page active">
+    <h2>Une date spéciale pour toi et moi</h2>
+    <input type="password" id="password" placeholder="Écris-la ici">
+    <button onclick="verify()">Entrer</button>
+    <p id="error"></p>
+</div>
+
+<!-- QUESTION -->
+<div id="p2" class="page">
+    <h2>Tu veux être ma Valentine ?</h2>
+    <button id="oui" onclick="showMenu()">Oui</button>
+    <button id="non" onmouseover="moveNo()">Non</button>
+</div>
+
+<!-- MENU -->
+<div id="p3" class="page">
+    <h2>Choisis une section 💖</h2>
+    <div class="menu">
+        <div class="block" onclick="goTo('calendar')">📅 Notre Temps</div>
+        <div class="block" onclick="goTo('photos')">🌌 Nos Photos</div>
+        <div class="block" onclick="goTo('story')">📖 Notre Histoire</div>
+    </div>
+</div>
+
+<!-- CALENDAR -->
+<div id="calendar" class="page">
+    <h2>Depuis le 21 Mai 2025</h2>
+    <p id="days"></p>
+    <table>
+        <tr><th>Di</th><th>Lu</th><th>Ma</th><th>Me</th><th>Je</th><th>Ve</th><th>Sa</th></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td>1</td><td>2</td></tr>
+        <tr><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr>
+        <tr><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td></tr>
+        <tr>
+            <td>17</td><td>18</td><td>19</td><td>20</td>
+            <td class="marked" onclick="showPopup('21 Mai 💖 Notre premier jour ensemble')">21 ❤️</td>
+            <td>22</td><td>23</td>
+        </tr>
+    </table>
+
+    <h3>Février 2026</h3>
+    <table>
+        <tr><th>Di</th><th>Lu</th><th>Ma</th><th>Me</th><th>Je</th><th>Ve</th><th>Sa</th></tr>
+        <tr><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr>
+        <tr><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td>
+            <td class="marked" onclick="showPopup('14 Février 💖 Notre premier Saint-Valentin')">14 ❤️</td>
+        </tr>
+    </table>
+
+    <button onclick="goBack()">Retour</button>
+</div>
+
+<!-- PHOTOS -->
+<div id="photos" class="page">
+    <h2>Nos Photos 🌸</h2>
+    <div class="photos-container">
+        <img src="photo1.jpg" alt="Photo 1">
+        <img src="photo2.jpg" alt="Photo 2">
+        <img src="photo3.jpg" alt="Photo 3">
+        <img src="photo4.jpg" alt="Photo 4">
+    </div>
+    <button onclick="goBack()">Retour</button>
+</div>
+
+<!-- STORY -->
+<div id="story" class="page">
+    <h2>Notre Histoire ❤️</h2>
+    <div id="story-text" style="font-size:18px; max-width:400px; margin:auto;"></div>
+    <button id="next" onclick="nextPart()">Suivant</button>
+    <button onclick="goBack()">Retour</button>
+    <div id="heartsStory"></div>
+</div>
+
+<!-- POPUP -->
+<div id="popup">
+    <h2>💖</h2>
+    <p id="popup-text"></p>
+    <button onclick="closePopup()">Fermer</button>
+</div>
+
+<script>
+/* MOT DE PASSE */
+function verify(){
+    const password=document.getElementById("password").value.trim();
+    if(password==="20052025"){
+        changePage("p1","p2");
+    } else {
+        document.getElementById("error").innerText="Ce n'est pas la bonne date.";
+    }
+}
+
+/* BOUTON NON HUE */
+function moveNo(){
+    const btn=document.getElementById("non");
+    btn.style.top=Math.random()*80+"vh";
+    btn.style.left=Math.random()*80+"vw";
+}
+
+/* MENU */
+function showMenu(){ changePage("p2","p3"); }
+function goTo(id){ changePage("p3",id); if(id==="calendar") calculateDays(); }
+function goBack(){ changePage(document.querySelector(".active").id,"p3"); }
+function changePage(cur,next){ document.getElementById(cur).classList.remove("active"); document.getElementById(next).classList.add("active"); }
+
+/* CALCUL DAYS */
+function calculateDays(){
+    const start=new Date("2025-05-21");
+    const today=new Date();
+    const diff=Math.floor((today-start)/(1000*60*60*24));
+    document.getElementById("days").innerText="Nous sommes ensemble depuis "+diff+" jours ❤️";
+}
+
+/* POPUP */
+function showPopup(text){ document.getElementById("popup-text").innerText=text; document.getElementById("popup").classList.add("active"); }
+function closePopup(){ document.getElementById("popup").classList.remove("active"); }
+
+/* HISTOIRE */
+const story=[
+    "Je me souviens du jour où nous nous sommes rencontrés, grâce à notre ami. J'étais nerveux mais toi, tu avais ce quelque chose qui m'attirait.",
+    "C'était le 20 mai, après l'école, et chaque mot échangé me faisait sourire sans que je m'en rende compte.",
+    "Nous étions timides et nous sommes allés marcher dans un parc, profitant du silence partagé.",
+    "Notre ami a essayé de nous pousser à nous embrasser, mais je voulais que ce soit naturel et vrai, juste nous deux.",
+    "Finalement, alors que je te raccompagnais chez toi, la magie du moment nous enveloppa et nous nous sommes embrassés au coin de la rue."
+];
+let part=0;
+const storyText=document.getElementById("story-text");
+function nextPart(){
+    if(part<story.length){
+        storyText.innerHTML=story[part];
+        part++;
+        createHeartStory();
+    } else { document.getElementById("next").style.display="none"; }
+}
+
+/* Cœurs flottants dans histoire */
+function createHeartStory(){
+    const heart=document.createElement("div");
+    heart.style.left=Math.random()*90 + "vw";
+    document.getElementById("heartsStory").appendChild(heart);
+    heart.classList.add("heart");
+    setTimeout(()=>{heart.remove()},5000);
+}
+
+/* Cœurs et mots flottants aléatoires */
+setInterval(()=>{
+    const textEl=document.createElement("div");
+    const words=["Je t’aime","I love you","Mon amour","Pour toujours"];
+    textEl.innerText = words[Math.floor(Math.random()*words.length)];
+    textEl.className="floatText";
+    textEl.style.left=Math.random()*80 + "vw";
+    textEl.style.color=["#ff4b7d","#ff99b3","#ffccdd"][Math.floor(Math.random()*3)];
+    document.body.appendChild(textEl);
+    setTimeout(()=>{textEl.remove()},6000);
+},1000);
+
+</script>
+</body>
+</html>
